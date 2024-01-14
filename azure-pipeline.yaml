@@ -106,13 +106,13 @@ stages:
                 scriptLocation: 'inlineScript'
                 inlineScript: '- bash: echo Contents in Pipeline Workspace Artifact Directory; ls -Ra $(Pipeline.Workspace)/terraform-manifests-out'
 
-
             - task: TerraformTaskV4@4
-              displayName: Terraform Apply
+              displayName: Terraform Destroy
               inputs:
                 provider: 'azurerm'
                 command: 'destroy'
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
                 commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
+
      
