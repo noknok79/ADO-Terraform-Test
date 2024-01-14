@@ -95,14 +95,14 @@ stages:
                 command: 'plan'
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
-                commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
+                commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out -destroy'
                 allowTelemetryCollection: false
 
             - task: TerraformTaskV4@4
               displayName: Terraform Destroy
               inputs:
                 provider: 'azurerm'
-                command: 'destroy'
+                command: 'apply'
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                commandOptions: '--auto-approve $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
+                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
