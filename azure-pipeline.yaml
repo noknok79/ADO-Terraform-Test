@@ -102,7 +102,7 @@ stages:
               displayName: Terraform Destroy
               inputs:
                 provider: 'azurerm'
-                command: 'apply'
+                command: 'destroy'
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                commandOptions: '-destroy $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
+                commandOptions: '--auto-approve $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
