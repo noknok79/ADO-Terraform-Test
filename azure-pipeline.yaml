@@ -105,16 +105,20 @@ stages:
                 commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out'
                 allowTelemetryCollection: false
 
-            - task: TerraformTaskV4@4
-              inputs:
-                provider: 'azurerm'
-                command: 'apply'
-                workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
-                environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
             - task: AzureCLI@2
               inputs:
                 azureSubscription: 'terraform-aks-azurerm-svc-con'
                 scriptType: 'bash'
                 scriptLocation: 'inlineScript'
                 inlineScript: '- bash: echo Contents in Pipeline Workspace Artifact Directory; ls -Ra $(Pipeline.Workspace)/terraform-manifests-out'
+
+
+            - task: TerraformTaskV4@4
+              displayName: Terraform Apply
+              inputs:
+                provider: 'azurerm'
+                command: 'apply'
+                workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
+                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
+                environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
+     
