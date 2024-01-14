@@ -76,18 +76,18 @@ stages:
               inputs:
                 secureFile: 'aksprodsshkey.pub'
 
+           
             - task: TerraformTaskV4@4
-                displayName: Terraform Init
-                inputs:
-                  provider: 'azurerm'
-                  command: 'init'
-                  workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifests'
-                  backendServiceArm: 'terraform-aks-azurerm-svc-con'
-                  backendAzureRmResourceGroupName: 'terraform-aks-storage-rg'
-                  backendAzureRmStorageAccountName: 'terratfstatestrg2'
-                  backendAzureRmContainerName: 'tfstatefiles'
-                  backendAzureRmKey: 'aks-base.tfstate'
-
+              displayName: Terraform Init
+              inputs:
+                provider: 'azurerm'
+                command: 'init'
+                workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
+                backendServiceArm: 'terraform-aks-azurerm-svc-con'
+                backendAzureRmResourceGroupName: 'terraform-aks-storage-rg'
+                backendAzureRmStorageAccountName: 'terratfstatestrg2'
+                backendAzureRmContainerName: 'tfstatefiles'
+                backendAzureRmKey: 'aks-$(DEV_ENVIRONMENT)-tfstate'
             - task: TerraformTaskV4@4
               displayName: Terraform Plan
               inputs:
@@ -97,12 +97,22 @@ stages:
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
                 commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
                 allowTelemetryCollection: false
-     
+
+            - task: AzureCLI@2
+              displayName: Echo dev-out file
+              inputs:
+                azureSubscription: 'terraform-aks-azurerm-svc-con'
+                scriptType: 'bash'
+                scriptLocation: 'inlineScript'
+                inlineScript: '- bash: echo Contents in Pipeline Workspace Artifact Directory; ls -Ra $(Pipeline.Workspace)/terraform-manifests-out'
+
+
             - task: TerraformTaskV4@4
-              displayName: Terraform Destroy
+              displayName: Terraform Apply
               inputs:
                 provider: 'azurerm'
                 command: 'destroy'
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
+                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
+     
