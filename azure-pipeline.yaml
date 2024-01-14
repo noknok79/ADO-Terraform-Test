@@ -112,7 +112,7 @@ stages:
                 provider: 'azurerm'
                 command: 'destroy'
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
+                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
 
      
