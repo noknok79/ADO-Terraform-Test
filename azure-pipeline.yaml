@@ -112,6 +112,7 @@ stages:
                 provider: 'azurerm'
                 command: 'show'
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
+                commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId)-destroy.out'
                 outputTo: 'file'
                 outputFormat: 'default'
                 fileName: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId)-destroy.out'
@@ -119,13 +120,11 @@ stages:
 
 
             - task: TerraformTaskV4@4
-              displayName: Terraform Destroy
+              displayName: Terraform Apply
               inputs:
                 provider: 'azurerm'
-                command: 'destroy'
+                command: 'apply'
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId)-destroy.out'
+                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
-            
-
      
