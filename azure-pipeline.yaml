@@ -106,6 +106,7 @@ stages:
                 allowTelemetryCollection: false
 
             - task: AzureCLI@2
+              displayName: Echo dev-out file
               inputs:
                 azureSubscription: 'terraform-aks-azurerm-svc-con'
                 scriptType: 'bash'
