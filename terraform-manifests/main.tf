@@ -42,16 +42,16 @@ provider "azurerm" {
   features {
     # Updated as part of June2023 to delete "ContainerInsights Resources" when deleting the Resource Group
     resource_group {
-      prevent_deletion_if_contains_resources = true
+      prevent_deletion_if_contains_resources = false
     }
   }
 }
-
+/*
 provider "azuread" {
-  tenant_id = "cab4c3be-84af-48f5-960f-7415daff3a80"
-  use_cli = false
+  #tenant_id = "cab4c3be-84af-48f5-960f-7415daff3a80"
+  use_cli   = false
 }
-
+*/
 
 # 3. Terraform Resource Block: Define a Random Pet Resource
 resource "random_pet" "aksrandom" {
