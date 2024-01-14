@@ -45,7 +45,7 @@ provider "azurerm" {
 }
 
 provider "azuread" {
-  tenant_id = 'cab4c3be-84af-48f5-960f-7415daff3a80'
+  tenant_id = "cab4c3be-84af-48f5-960f-7415daff3a80"
   use_cli = false
 }
 
