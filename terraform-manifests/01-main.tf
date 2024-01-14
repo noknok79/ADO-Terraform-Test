@@ -18,7 +18,7 @@ terraform {
     }
     azuread = {
       source  = "hashicorp/azuread"
-      version = "~> 3"
+      version = "~> 2"
     }
     random = {
       source  = "hashicorp/random"
@@ -42,6 +42,11 @@ provider "azurerm" {
   features {
 
   }
+}
+
+provider "azuread" {
+  tenant_id = 'cab4c3be-84af-48f5-960f-7415daff3a80'
+  use_cli = false
 }
 
 # 3. Terraform Resource Block: Define a Random Pet Resource
