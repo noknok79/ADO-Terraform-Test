@@ -107,15 +107,6 @@ stages:
                 inlineScript: '- bash: echo Contents in Pipeline Workspace Artifact Directory; ls -Ra $(Pipeline.Workspace)/terraform-manifests-out'
 
             - task: TerraformTaskV4@4
-              displayName: Terraform Apply
-              inputs:
-                provider: 'azurerm'
-                command: 'apply'
-                workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
-                environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
-
-            - task: TerraformTaskV4@4
               displayName: Terraform Show
               inputs:
                 provider: 'azurerm'
