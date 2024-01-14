@@ -98,32 +98,12 @@ stages:
                 commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
                 allowTelemetryCollection: false
 
-            - task: AzureCLI@2
-              displayName: Echo dev-out file
-              inputs:
-                azureSubscription: 'terraform-aks-azurerm-svc-con'
-                scriptType: 'bash'
-                scriptLocation: 'inlineScript'
-                inlineScript: '- bash: echo Contents in Pipeline Workspace Artifact Directory; ls -Ra $(Pipeline.Workspace)/terraform-manifests-out'
-
-            - task: TerraformTaskV4@4
-              displayName: Terraform Show
-              inputs:
-                provider: 'azurerm'
-                command: 'show'
-                workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                commandOptions: '-out $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId)-destroy.out'
-                outputTo: 'file'
-                outputFormat: 'json'
-                fileName: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId)-destroy.out'
-                environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
-
 
             - task: TerraformTaskV4@4
               displayName: Terraform Destroy
               inputs:
                 provider: 'azurerm'
-                command: 'destroy'
+                command: 'plan'
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId)-destroy.out'
+                commandOptions: '-destroy'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
