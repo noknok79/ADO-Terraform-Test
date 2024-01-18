@@ -76,15 +76,11 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
 
-                - task: ManualValidation@0
-                  displayName: "Manual Validation"
+                - task: ManualIntervention@8
+                  displayName: For Approval
                   inputs:
-                    notifyUsers: |
-                      nokiev@yahoo.com
-                      nokiev@gmail.com
-                      instructions: 'Please review the plan and confirm if you want to proceed with destroying all resources.'
-                      onTimeout: 'reject'
-
+                    instructions: 'Please Approve'
+                    emailRecipients: 'nokiev@yahoo.com'
                 - task: TerraformTaskV4@4
                   displayName: Terraform Init
                   inputs:
@@ -137,14 +133,12 @@ stages:
                   name: sshkey
                   inputs:
                     secureFile: "aksprodsshkey.pub"
-                - task: ManualValidation@0
-                  displayName: "Manual Validation"
+
+                - task: ManualIntervention@8
+                  displayName: For Approval
                   inputs:
-                    notifyUsers: |
-                      nokiev@yahoo.com
-                      nokiev@gmail.com
-                      instructions: 'Please review the plan and confirm if you want to proceed with destroying all resources.'
-                      onTimeout: 'reject'
+                    instructions: 'Please Approve'
+                    emailRecipients: 'nokiev@yahoo.com'
 
                 - task: TerraformTaskV4@4
                   displayName: Terraform Init
