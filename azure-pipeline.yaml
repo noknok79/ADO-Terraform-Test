@@ -221,7 +221,7 @@ stages:
 
     - deployment: DeleteQAResources
       displayName: Destroy QA Resources created
-      dependsOn: DeleteDEVResources
+      #dependsOn: DeleteDEVResources
       pool:
         vmImage: 'ubuntu-latest'
       environment: $(QA_ENVIRONMENT)
