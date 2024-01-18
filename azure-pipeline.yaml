@@ -75,12 +75,6 @@ stages:
                   name: sshkey
                   inputs:
                     secureFile: "aksprodsshkey.pub"
-
-                - task: ManualIntervention@8
-                  displayName: For Approval
-                  inputs:
-                    instructions: 'Please Approve'
-                    emailRecipients: 'nokiev@yahoo.com'
                 - task: TerraformTaskV4@4
                   displayName: Terraform Init
                   inputs:
@@ -134,11 +128,6 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
 
-                - task: ManualIntervention@8
-                  displayName: For Approval
-                  inputs:
-                    instructions: 'Please Approve'
-                    emailRecipients: 'nokiev@yahoo.com'
 
                 - task: TerraformTaskV4@4
                   displayName: Terraform Init
@@ -196,6 +185,12 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
 
+                - task: ManualIntervention@8
+                  displayName: FOR APPROVAL
+                  inputs:
+                    instructions: 'Please approve'
+                    emailRecipients: 'nokiev@yahoo.com'
+
                 - task: TerraformTaskV4@4
                   displayName: Terraform Init DEV Env
                   inputs:
@@ -242,6 +237,13 @@ stages:
                   name: sshkey
                   inputs:
                     secureFile: "aksprodsshkey.pub"
+
+                - task: ManualIntervention@8
+                  displayName: FOR APPROVAL
+                  inputs:
+                    instructions: 'For Approval'
+                    emailRecipients: 'nokiev@yahoo.com'
+
 
                 - task: TerraformTaskV4@4
                   displayName: Terraform Init QA Env
