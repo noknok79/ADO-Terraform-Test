@@ -173,7 +173,7 @@ stages:
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
     
     - deployment: DeleteAllResources
-      displayName: Destroy All Clusters
+      displayName: Destroy All Resources created
       dependsOn: DeployQAAKSCluster
       pool:
         vmImage: 'ubuntu-latest'
@@ -189,7 +189,7 @@ stages:
                 secureFile: 'aksprodsshkey.pub'
 
             - task: TerraformTaskV4@4
-              displayName: Terraform Init
+              displayName: Terraform Init DEV Env
               inputs:
                 provider: 'azurerm'
                 command: 'init'
@@ -201,7 +201,7 @@ stages:
                 backendAzureRmKey: 'aks-$(DEV_ENVIRONMENT)-tfstate'       
                 
             - task: TerraformTaskV4@4
-              displayName: Terraform Plan/Destroy
+              displayName: Terraform Plan to Destroy Dev Env
               inputs:
                 provider: 'azurerm'
                 command: 'plan'
@@ -222,7 +222,7 @@ stages:
 
 
             - task: TerraformTaskV4@4
-              displayName: Terraform Init
+              displayName: Terraform Init QA Env
               inputs:
                 provider: 'azurerm'
                 command: 'init'
@@ -235,7 +235,7 @@ stages:
 
           
             - task: TerraformTaskV4@4
-              displayName: Terraform Plan/Destroy
+              displayName: Terraform Plan to Destroy QA Env
               inputs:
                 provider: 'azurerm'
                 command: 'plan'
@@ -245,7 +245,7 @@ stages:
                 allowTelemetryCollection: false
 
             - task: TerraformTaskV4@4
-              displayName: Terraform Destroy
+              displayName: Terraform Destroy QA Env
               inputs:
                 provider: 'azurerm'
                 command: 'apply'
