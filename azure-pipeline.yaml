@@ -162,7 +162,7 @@ stages:
       #dependsOn: DeplyDEVAKSCluster
       pool:
         vmImage: 'ubuntu-latest'
-      environment: $(QA_ENVIRONMENT)
+      environment: $(DEV_ENVIRONMENT)
       strategy:
         runOnce:
           deploy:
@@ -175,7 +175,7 @@ stages:
 
     - deployment: DeleteDEVResources
       displayName: Destroy DEV Resources created
-      dependsOn: DeployQAAKSCluster
+      #dependsOn: DeployQAAKSCluster
       pool:
         vmImage: 'ubuntu-latest'
       environment: $(DEV_ENVIRONMENT)
