@@ -209,7 +209,7 @@ stages:
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
                 commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(QA_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out -destroy'
                 allowTelemetryCollection: false
-            
+
             - task: TerraformTaskV4@4
               displayName: Terraform Destroy
               inputs:
@@ -218,6 +218,21 @@ stages:
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
                 commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
+
+
+
+            - task: TerraformTaskV4@4
+              displayName: Terraform Init
+              inputs:
+                provider: 'azurerm'
+                command: 'init'
+                workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
+                backendServiceArm: 'terraform-aks-azurerm-svc-con'
+                backendAzureRmResourceGroupName: 'terraform-aks-storage-rg'
+                backendAzureRmStorageAccountName: 'terratfstatestrg2'
+                backendAzureRmContainerName: 'tfstatefiles'
+                backendAzureRmKey: 'aks-$(QA_ENVIRONMENT)-tfstate'
+
           
             - task: TerraformTaskV4@4
               displayName: Terraform Plan/Destroy
