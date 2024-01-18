@@ -116,6 +116,10 @@ stages:
                 commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
 
+
+
+- stage: DestroyAllResources
+  jobs:
     - deployment: DeployQAAKSCluster
       displayName: Deploy QA AKS Cluseter
       dependsOn: DeplyDEVAKSCluster
