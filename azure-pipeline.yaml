@@ -62,6 +62,7 @@ stages:
     - deployment: DeleteAllResources
       displayName: Destroy All Clusters
       #dependsOn: DeployQAAKSCluster
+      dependsOn: TerraformValidate
       pool:
         vmImage: 'ubuntu-latest'
       environment: $(QA_ENVIRONMENT)
