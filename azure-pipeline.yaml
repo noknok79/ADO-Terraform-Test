@@ -122,7 +122,7 @@ stages:
   jobs:
     - deployment: DeployQAAKSCluster
       displayName: Deploy QA AKS Cluseter
-      dependsOn: DeplyDEVAKSCluster
+      #dependsOn: DeplyDEVAKSCluster
       pool:
         vmImage: 'ubuntu-latest'
       environment: $(QA_ENVIRONMENT)
