@@ -61,7 +61,7 @@ stages:
     
     - deployment: DeleteAllResources
       displayName: Destroy All Clusters
-      dependsOn: DeployQAAKSCluster
+      #dependsOn: DeployQAAKSCluster
       pool:
         vmImage: 'ubuntu-latest'
       environment: $(QA_ENVIRONMENT)
