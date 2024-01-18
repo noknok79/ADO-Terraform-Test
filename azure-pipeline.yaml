@@ -185,12 +185,7 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
 
-                - task: ManualIntervention@8
-                  displayName: FOR APPROVAL
-                  inputs:
-                    instructions: 'Please approve'
-                    emailRecipients: 'nokiev@yahoo.com'
-                    onTimeout: 'reject'
+ 
 
                 - task: TerraformTaskV4@4
                   displayName: Terraform Init DEV Env
@@ -239,12 +234,7 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
 
-                - task: ManualIntervention@8
-                  displayName: FOR APPROVAL
-                  inputs:
-                    instructions: 'For Approval'
-                    emailRecipients: 'nokiev@yahoo.com'
-                    onTimeout: 'reject'
+        
 
 
                 - task: TerraformTaskV4@4
