@@ -62,7 +62,7 @@ stages:
 - stage: DeployAKSCluster
   jobs:
     - deployment: DeplyDEVAKSCluster
-      displayName: Deploy AKS Cluseter
+      displayName: Deploy DEV AKS Cluseter
       pool:
         vmImage: 'ubuntu-latest'
       environment: $(DEV_ENVIRONMENT)
