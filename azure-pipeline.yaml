@@ -116,6 +116,21 @@ stages:
                 commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
 
+    - deployment: DeplyQAAKSCluster
+      displayName: Deploy QA AKS Cluseter
+      pool:
+        vmImage: 'ubuntu-latest'
+      environment: $(QA_ENVIRONMENT)
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: DownloadSecureFile@1
+              displayName: Download SSH
+              name: sshkey
+              inputs:
+                secureFile: 'aksprodsshkey.pub'
+
             - task: TerraformTaskV4@4
               displayName: Terraform Init
               inputs:
@@ -157,22 +172,6 @@ stages:
 
 - stage: DestroyAllResources
   jobs:
-    - deployment: DeployQAAKSCluster
-      displayName: Deploy QA AKS Cluseter
-      #dependsOn: DeplyDEVAKSCluster
-      pool:
-        vmImage: 'ubuntu-latest'
-      environment: $(DEV_ENVIRONMENT)
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-            - task: DownloadSecureFile@1
-              displayName: Download SSH
-              name: sshkey
-              inputs:
-                secureFile: 'aksprodsshkey.pub'
-
     - deployment: DeleteDEVResources
       displayName: Destroy DEV Resources created
       #dependsOn: DeployQAAKSCluster
