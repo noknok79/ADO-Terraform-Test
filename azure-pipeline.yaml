@@ -189,6 +189,18 @@ stages:
                 secureFile: 'aksprodsshkey.pub'
 
             - task: TerraformTaskV4@4
+              displayName: Terraform Init
+              inputs:
+                provider: 'azurerm'
+                command: 'init'
+                workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
+                backendServiceArm: 'terraform-aks-azurerm-svc-con'
+                backendAzureRmResourceGroupName: 'terraform-aks-storage-rg'
+                backendAzureRmStorageAccountName: 'terratfstatestrg2'
+                backendAzureRmContainerName: 'tfstatefiles'
+                backendAzureRmKey: 'aks-$(DEV_ENVIRONMENT)-tfstate'       
+                
+            - task: TerraformTaskV4@4
               displayName: Terraform Plan/Destroy
               inputs:
                 provider: 'azurerm'
