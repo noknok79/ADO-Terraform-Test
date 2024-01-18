@@ -201,7 +201,7 @@ stages:
                 backendAzureRmKey: 'aks-$(DEV_ENVIRONMENT)-tfstate'       
                 
             - task: TerraformTaskV4@4
-              displayName: Terraform Plan to Destroy
+              displayName: Terraform Plan to Destroy Dev Env
               inputs:
                 provider: 'azurerm'
                 command: 'plan'
@@ -235,7 +235,7 @@ stages:
 
           
             - task: TerraformTaskV4@4
-              displayName: Terraform Plan to Destroy
+              displayName: Terraform Plan to Destroy QA Env
               inputs:
                 provider: 'azurerm'
                 command: 'plan'
@@ -245,7 +245,7 @@ stages:
                 allowTelemetryCollection: false
 
             - task: TerraformTaskV4@4
-              displayName: Terraform Destroy
+              displayName: Terraform Destroy QA Env
               inputs:
                 provider: 'azurerm'
                 command: 'apply'
