@@ -172,12 +172,12 @@ stages:
                 commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
     
-    - deployment: DeleteAllResources
-      displayName: Destroy All Resources created
+    - deployment: DeleteDEVResources
+      displayName: Destroy DEV Resources created
       dependsOn: DeployQAAKSCluster
       pool:
         vmImage: 'ubuntu-latest'
-      environment: $(QA_ENVIRONMENT)
+      environment: $(DEV_ENVIRONMENT)
       strategy:
         runOnce:
           deploy:
@@ -207,7 +207,7 @@ stages:
                 command: 'plan'
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
-                commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(QA_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out -destroy'
+                commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out -destroy'
                 allowTelemetryCollection: false
 
             - task: TerraformTaskV4@4
@@ -216,9 +216,24 @@ stages:
                 provider: 'azurerm'
                 command: 'apply'
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out'
+                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
 
+    - deployment: DeleteQAResources
+      displayName: Destroy QA Resources created
+      dependsOn: DeleteDEVResources
+      pool:
+        vmImage: 'ubuntu-latest'
+      environment: $(QA_ENVIRONMENT)
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: DownloadSecureFile@1
+              displayName: Download SSH
+              name: sshkey
+              inputs:
+                secureFile: 'aksprodsshkey.pub'
 
 
             - task: TerraformTaskV4@4
@@ -241,7 +256,7 @@ stages:
                 command: 'plan'
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
-                commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out -destroy'
+                commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(QA_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out -destroy'
                 allowTelemetryCollection: false
 
             - task: TerraformTaskV4@4
@@ -250,5 +265,5 @@ stages:
                 provider: 'azurerm'
                 command: 'apply'
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
+                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'

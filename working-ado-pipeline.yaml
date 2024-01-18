@@ -172,12 +172,12 @@ stages:
                 commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
     
-    - deployment: DeleteAllResources
-      displayName: Destroy All Clusters
+    - deployment: DeleteDEVResources
+      displayName: Destroy DEV Resources created
       dependsOn: DeployQAAKSCluster
       pool:
         vmImage: 'ubuntu-latest'
-      environment: $(QA_ENVIRONMENT)
+      environment: $(DEV_ENVIRONMENT)
       strategy:
         runOnce:
           deploy:
@@ -189,7 +189,7 @@ stages:
                 secureFile: 'aksprodsshkey.pub'
 
             - task: TerraformTaskV4@4
-              displayName: Terraform Init
+              displayName: Terraform Init DEV Env
               inputs:
                 provider: 'azurerm'
                 command: 'init'
@@ -201,41 +201,7 @@ stages:
                 backendAzureRmKey: 'aks-$(DEV_ENVIRONMENT)-tfstate'       
                 
             - task: TerraformTaskV4@4
-              displayName: Terraform Plan/Destroy
-              inputs:
-                provider: 'azurerm'
-                command: 'plan'
-                workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
-                commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(QA_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out -destroy'
-                allowTelemetryCollection: false
-
-            - task: TerraformTaskV4@4
-              displayName: Terraform Destroy
-              inputs:
-                provider: 'azurerm'
-                command: 'apply'
-                workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out'
-                environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
-
-
-
-            - task: TerraformTaskV4@4
-              displayName: Terraform Init
-              inputs:
-                provider: 'azurerm'
-                command: 'init'
-                workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                backendServiceArm: 'terraform-aks-azurerm-svc-con'
-                backendAzureRmResourceGroupName: 'terraform-aks-storage-rg'
-                backendAzureRmStorageAccountName: 'terratfstatestrg2'
-                backendAzureRmContainerName: 'tfstatefiles'
-                backendAzureRmKey: 'aks-$(QA_ENVIRONMENT)-tfstate'
-
-          
-            - task: TerraformTaskV4@4
-              displayName: Terraform Plan/Destroy
+              displayName: Terraform Plan to Destroy Dev Env
               inputs:
                 provider: 'azurerm'
                 command: 'plan'
@@ -251,4 +217,53 @@ stages:
                 command: 'apply'
                 workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
                 commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
+                environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
+
+    - deployment: DeleteQAResources
+      displayName: Destroy QA Resources created
+      dependsOn: DeleteDEVResources
+      pool:
+        vmImage: 'ubuntu-latest'
+      environment: $(QA_ENVIRONMENT)
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: DownloadSecureFile@1
+              displayName: Download SSH
+              name: sshkey
+              inputs:
+                secureFile: 'aksprodsshkey.pub'
+
+
+            - task: TerraformTaskV4@4
+              displayName: Terraform Init QA Env
+              inputs:
+                provider: 'azurerm'
+                command: 'init'
+                workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
+                backendServiceArm: 'terraform-aks-azurerm-svc-con'
+                backendAzureRmResourceGroupName: 'terraform-aks-storage-rg'
+                backendAzureRmStorageAccountName: 'terratfstatestrg2'
+                backendAzureRmContainerName: 'tfstatefiles'
+                backendAzureRmKey: 'aks-$(QA_ENVIRONMENT)-tfstate'
+
+          
+            - task: TerraformTaskV4@4
+              displayName: Terraform Plan to Destroy QA Env
+              inputs:
+                provider: 'azurerm'
+                command: 'plan'
+                workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
+                environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
+                commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(QA_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out -destroy'
+                allowTelemetryCollection: false
+
+            - task: TerraformTaskV4@4
+              displayName: Terraform Destroy QA Env
+              inputs:
+                provider: 'azurerm'
+                command: 'apply'
+                workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
+                commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out'
                 environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
