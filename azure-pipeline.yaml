@@ -61,7 +61,7 @@ stages:
     
     - deployment: DeleteAllResources
       displayName: Destroy All Clusters
-       dependsOn: TerraformValidateJob
+      dependsOn: TerraformValidateJob
       #dependsOn: DeployQAAKSCluster
      
       pool:
