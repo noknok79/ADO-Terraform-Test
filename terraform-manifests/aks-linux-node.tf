@@ -14,14 +14,14 @@ resource "azurerm_kubernetes_cluster_node_pool" "linux101" {
   vnet_subnet_id        = azurerm_subnet.aks-default.id
   node_labels = {
     "nodepool-type" = "user"
-    "environment"   = "production"
+    "environment"   = var.environment
     "nodepoolos"    = "linux"
-    "app"           = "java-apps"
+    "app"           = "parts-web"
   }
   tags = {
     "nodepool-type" = "user"
-    "environment"   = "production"
+    "environment"   = var.environment
     "nodepoolos"    = "linux"
-    "app"           = "java-apps"
+    "app"           = "parts-web"
   }
 }
