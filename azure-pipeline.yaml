@@ -75,14 +75,15 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
 
+
+
                 - task: AzureCLI@2
                   inputs:
                     azureSubscription: 'terraform-aks-azurerm-svc-con'
-                    
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f **/deploy.yaml'
-                    workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
+                    inlineScript: 'kubectl apply -f $(System.DefaultWorkingDirectory)/kube-manifests/deploy.yaml'
+
 
 
 
@@ -107,8 +108,8 @@ stages:
                     
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f **/deploy.yaml'
-                    workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
+                    inlineScript: 'kubectl apply -f $(System.DefaultWorkingDirectory)/kube-manifests/deploy.yaml'
+                    
 
 
 
