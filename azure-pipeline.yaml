@@ -188,7 +188,7 @@ stages:
                     azureSubscription: 'terraform-aks-azurerm-svc-con'
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f kube-manifest'
+                    inlineScript: 'kubectl apply -f deploy.yaml'
                     addSpnToEnvironment: true
                     useGlobalConfig: true
                     workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifest'
@@ -213,7 +213,7 @@ stages:
                     azureSubscription: 'terraform-aks-azurerm-svc-con'
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f kube-manifest'
+                    inlineScript: 'kubectl apply -f deploy.yaml'
                     addSpnToEnvironment: true
                     useGlobalConfig: true
                     workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifest'
