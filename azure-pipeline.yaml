@@ -111,8 +111,8 @@ stages:
                     environmentServiceNameAzureRM: "terraform-aks-azurerm-svc-con"
 
       - deployment: DeleteExistingQAResources
-        continueOnError: true
         displayName: Destroy QA Resources created
+        continueOnError: true
         #dependsOn: DeleteDEVResources
         pool:
           vmImage: "ubuntu-latest"
@@ -164,7 +164,7 @@ stages:
   - stage: DeployAKSCluster
     jobs:
       - deployment: DeplyDEVAKSCluster
-        concontinueOn: true
+        continueOnError: true
         displayName: Deploy DEV AKS Cluseter
         pool:
           vmImage: "ubuntu-latest"
