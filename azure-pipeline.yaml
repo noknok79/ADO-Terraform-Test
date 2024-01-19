@@ -82,7 +82,7 @@ stages:
                     azureResourceGroup: 'terraform-aks-$(DEV_ENVIRONMENT)'
                     kubernetesCluster: 'terraform-aks-$(DEV_ENVIRONMENT)-cluster'
                     command: 'apply'
-                    arguments: '-f deploy'
+                    arguments: '-f /kube-manifests/deploy.yaml'
                     secretType: 'dockerRegistry'
                     containerRegistryType: 'Azure Container Registry'
 
@@ -110,7 +110,7 @@ stages:
                     azureResourceGroup: 'terraform-aks-$(QA_ENVIRONMENT)'
                     kubernetesCluster: 'terraform-aks-$(QA_ENVIRONMENT)-cluster'
                     command: 'apply'
-                    arguments: '-f deploy'
+                    arguments: '-f /kube-manifests/deploy.yaml'
                     secretType: 'dockerRegistry'
                     containerRegistryType: 'Azure Container Registry'
 
