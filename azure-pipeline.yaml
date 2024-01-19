@@ -81,7 +81,7 @@ stages:
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
                     inlineScript: 'kubectl apply -f kube-manifests'
-                    workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
+                    workingDirectory: $(Pipeline.Workspace)/kube-manifests'
 
 
 
@@ -107,7 +107,7 @@ stages:
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
                     inlineScript: 'kubectl apply -f kube-manifests'
-                    workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
+                    workingDirectory: '$(Pipeline.Workspace)/kube-manifests'
 
 
   - stage: DestroyExistingResources
