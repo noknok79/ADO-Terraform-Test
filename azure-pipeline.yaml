@@ -166,6 +166,57 @@ stages:
                     workingDirectory: "$(Pipeline.Workspace)/terraform-manifests-out"
                     commandOptions: "$(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out"
                     environmentServiceNameAzureRM: "terraform-aks-azurerm-svc-con"
+  - stage: DeployPartsWebApp
+    jobs:
+      - deployment: DeployPartsWebApp
+        displayName: Deploy DEV AKS Cluseter
+        pool:
+          vmImage: "ubuntu-latest"
+        environment: $(DEV_ENVIRONMENT)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadSecureFile@1
+                  displayName: Download SSH
+                  name: sshkey
+                  inputs:
+                    secureFile: "aksprodsshkey.pub"
+
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: 'terraform-aks-azurerm-svc-con'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: 'kubectl apply -f kube-manifest'
+                    addSpnToEnvironment: true
+                    useGlobalConfig: true
+                    workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifest'
+
+      - deployment: DeployPartsWebApp
+        displayName: Deploy QA AKS Cluseter
+        pool:
+          vmImage: "ubuntu-latest"
+        environment: $(QA_ENVIRONMENT)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadSecureFile@1
+                  displayName: Download SSH
+                  name: sshkey
+                  inputs:
+                    secureFile: "aksprodsshkey.pub"
+
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: 'terraform-aks-azurerm-svc-con'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: 'kubectl apply -f kube-manifest'
+                    addSpnToEnvironment: true
+                    useGlobalConfig: true
+                    workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifest'
 
   - stage: DestroyAllResources
     jobs:
