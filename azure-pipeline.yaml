@@ -78,8 +78,7 @@ stages:
                 - task: KubernetesManifest@1
                   inputs:
                     action: 'deploy'
-                    connectionType: 'azureResourceManager'
-                    azureSubscriptionConnection: 'terraform-aks-azurerm-svc-con'
+                    connectionType: 'kubernetesServiceConnection'
                     namespace: 'default'
                     manifests: 'deploy.yaml'
 
@@ -103,8 +102,7 @@ stages:
                 - task: KubernetesManifest@1
                   inputs:
                     action: 'deploy'
-                    connectionType: 'azureResourceManager'
-                    azureSubscriptionConnection: 'terraform-aks-azurerm-svc-con'
+                    connectionType: 'kubernetesServiceConnection'
                     namespace: 'default'
                     manifests: 'deploy.yaml'
 
