@@ -17,7 +17,8 @@ spec:
           image: noknok79/mongo:latest
           ports:
             - containerPort: 27017
-
+      nodeSelector:
+        app: parts-web  
 ---
 apiVersion: v1
 kind: Service
@@ -51,7 +52,8 @@ spec:
           image: noknok79/parts-order:latest
           ports:
             - containerPort: 80
-
+      nodeSelector:
+        app: parts-web  
 ---
 apiVersion: v1
 kind: Service
@@ -99,5 +101,3 @@ spec:
   ports:
     - port: 80
       targetPort: 80
-
-
