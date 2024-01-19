@@ -82,7 +82,13 @@ stages:
                     artifact: "kube-manifests-out"
                     publishLocation: "pipeline"
 
-
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: 'terraform-aks-azurerm-svc-con'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: 'kubectl apply -f deploy.yaml'
+                    workingDirectory: '(System.DefaultWorkingDirectory)/kube-manifests'
 
 
       - deployment: DeployUnfinishQAPartsWebApp
