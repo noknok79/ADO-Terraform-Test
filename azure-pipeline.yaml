@@ -74,15 +74,15 @@ stages:
                   name: sshkey
                   inputs:
                     secureFile: "aksprodsshkey.pub"
-
+                
                 - task: Kubernetes@1
                   inputs:
                     connectionType: 'Azure Resource Manager'
                     azureSubscriptionEndpoint: 'terraform-aks-azurerm-svc-con'
-                    useClusterAdmin: true
-                    namespace: 'default'
-                    command: apply
-                    arguments: '-f deploy.yaml'
+                    azureResourceGroup: 'terraform-aks-$(DEV_ENVIRONMENT)'
+                    kubernetesCluster: 'terraform-aks-$(DEV_ENVIRONMENT)-cluster'
+                    command: 'apply'
+                    arguments: '-f deploy'
                     secretType: 'dockerRegistry'
                     containerRegistryType: 'Azure Container Registry'
 
@@ -107,11 +107,14 @@ stages:
                   inputs:
                     connectionType: 'Azure Resource Manager'
                     azureSubscriptionEndpoint: 'terraform-aks-azurerm-svc-con'
-                    namespace: 'default'
+                    azureResourceGroup: 'terraform-aks-$(QA_ENVIRONMENT)'
+                    kubernetesCluster: 'terraform-aks-$(QA_ENVIRONMENT)-cluster'
                     command: 'apply'
-                    arguments: '-f deploy.yaml'
+                    arguments: '-f deploy'
                     secretType: 'dockerRegistry'
                     containerRegistryType: 'Azure Container Registry'
+
+
 
 
 
