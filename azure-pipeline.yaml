@@ -75,25 +75,14 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
 
-                - task: PublishBuildArtifacts@1
+                - task: KubernetesManifest@1
                   inputs:
-                    PathtoPublish: '$(System.DefaultWorkingDirectory)/kube-manifests'
-                    ArtifactName: 'drop'
-                    publishLocation: 'FilePath'
-                    TargetPath: '$(System.DefaultWorkingDirectory)/kube-manifests-out'
+                    action: 'apply'
+                    connectionType: 'azureResourceManager'
+                    azureSubscriptionConnection: 'terraform-aks-azurerm-svc-con'
+                    namespace: 'default'
+                    manifests: 'deploy.yaml'
 
-
-                - task: KubectlInstaller@0
-                  inputs:
-                    kubectlVersion: 'latest'
-
-                - task: AzureCLI@2
-                  inputs:
-                    azureSubscription: 'terraform-aks-azurerm-svc-con'
-                    scriptType: 'bash'
-                    scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f deploy.yaml'
-                    workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
 
 
       - deployment: DeployUnfinishQAPartsWebApp
@@ -110,29 +99,14 @@ stages:
                   name: sshkey
                   inputs:
                     secureFile: "aksprodsshkey.pub"
-                
-                - task: PublishBuildArtifacts@1
+  
+                - task: KubernetesManifest@1
                   inputs:
-                    PathtoPublish: '$(System.DefaultWorkingDirectory)/kube-manifests'
-                    ArtifactName: 'drop'
-                    publishLocation: 'FilePath'
-                    TargetPath: '$(System.DefaultWorkingDirectory)/kube-manifests-out'
-
-
-                - task: KubectlInstaller@0
-                  inputs:
-                    kubectlVersion: 'latest'
-
-                
-                - task: AzureCLI@2
-                  inputs:
-                    azureSubscription: "terraform-aks-azurerm-svc-con"
-                    scriptType: "bash"
-                    scriptLocation: "inlineScript"
-                    inlineScript: "kubectl apply -f deploy.yaml"
-                    workingDirectory: "$(System.DefaultWorkingDirectory)/kube-manifests"
-
-
+                    action: 'apply'
+                    connectionType: 'azureResourceManager'
+                    azureSubscriptionConnection: 'terraform-aks-azurerm-svc-con'
+                    namespace: 'default'
+                    manifests: 'deploy.yaml'
 
 
   - stage: DestroyExistingResources
