@@ -61,7 +61,7 @@ stages:
   - stage: DestroyExistingResources
     jobs:
       - deployment: DeleteExistingDEvResources
-        ontinueOnError: true
+        continueOnError: true
         displayName: Destroy DEV Resources created
         #dependsOn: DeployQAAKSCluster
         pool:
