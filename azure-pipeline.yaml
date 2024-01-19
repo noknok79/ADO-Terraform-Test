@@ -168,7 +168,7 @@ stages:
                     environmentServiceNameAzureRM: "terraform-aks-azurerm-svc-con"
   - stage: DeployPartsWebApp
     jobs:
-      - deployment: DeployPartsWebApp
+      - deployment: DeployDEVPartsWebApp
         displayName: Deploy DEV AKS Cluseter
         pool:
           vmImage: "ubuntu-latest"
@@ -193,7 +193,7 @@ stages:
                     useGlobalConfig: true
                     workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifest'
 
-      - deployment: DeployPartsWebApp
+      - deployment: DeployQCPartsWebApp
         displayName: Deploy QA AKS Cluseter
         pool:
           vmImage: "ubuntu-latest"
