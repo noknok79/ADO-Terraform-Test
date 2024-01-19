@@ -75,11 +75,13 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
 
-                - task: PublishPipelineArtifact@1
+                - task: PublishBuildArtifacts@1
                   inputs:
-                    targetPath: "$(System.DefaultWorkingDirectory)/kube-manifests"
-                    artifact: "kube-manifests-out"
-                    publishLocation: "pipeline"
+                    PathtoPublish: '$(System.DefaultWorkingDirectory)/kube-manifests'
+                    ArtifactName: 'drop'
+                    publishLocation: 'FilePath'
+                    TargetPath: '$(System.DefaultWorkingDirectory)/kube-manifests-out'
+
 
                 - task: KubectlInstaller@0
                   inputs:
@@ -109,12 +111,13 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
                 
-                - task: PublishPipelineArtifact@1
-                  displayName: Publish Artifacts
+                - task: PublishBuildArtifacts@1
                   inputs:
-                    targetPath: "$(System.DefaultWorkingDirectory)/kube-manifests"
-                    artifact: "kube-manifests-out"
-                    publishLocation: "pipeline"
+                    PathtoPublish: '$(System.DefaultWorkingDirectory)/kube-manifests'
+                    ArtifactName: 'drop'
+                    publishLocation: 'FilePath'
+                    TargetPath: '$(System.DefaultWorkingDirectory)/kube-manifests-out'
+
 
                 - task: KubectlInstaller@0
                   inputs:
