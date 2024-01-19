@@ -76,11 +76,10 @@ stages:
                     secureFile: "aksprodsshkey.pub"
                 
                 - task: PublishPipelineArtifact@1
-                  displayName: Publish Artifacts
                   inputs:
-                    targetPath: "$(System.DefaultWorkingDirectory)/kube-manifests"
-                    artifact: "kube-manifests-out"
-                    publishLocation: "pipeline"
+                    targetPath: '$(System.DefaultWorkingDirectory)/kube-manifests'
+                    artifact: 'kube-manifests-out'
+                    publishLocation: 'pipeline'
 
                 - task: AzureCLI@2
                   inputs:
