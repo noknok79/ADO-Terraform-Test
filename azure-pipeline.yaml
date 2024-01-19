@@ -58,9 +58,10 @@ stages:
   ## Step-3: Terraform Initialize (State Storage to store in Azure Storage Account for Dev AKS Cluster)
   ## Step-4: Terraform Plan (Create Plan)
   ## Step-5: Terraform Apply (Use the plan created in previous step)
-- stage: DestroyExistingResources
+  - stage: DestroyExistingResources
     jobs:
-      - deployment: DeleteDEVResources
+      - deployment: DeleteExistingDEvResources
+        ontinueOnError: true
         displayName: Destroy DEV Resources created
         #dependsOn: DeployQAAKSCluster
         pool:
@@ -109,8 +110,9 @@ stages:
                     commandOptions: "$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out"
                     environmentServiceNameAzureRM: "terraform-aks-azurerm-svc-con"
 
-      - deployment: DeleteQAResources
+      - deployment: DeleteExistingQAResources
         displayName: Destroy QA Resources created
+        continueonError: true
         #dependsOn: DeleteDEVResources
         pool:
           vmImage: "ubuntu-latest"
@@ -162,7 +164,7 @@ stages:
   - stage: DeployAKSCluster
     jobs:
       - deployment: DeplyDEVAKSCluster
-        concontinueOn: True
+        concontinueOn: true
         displayName: Deploy DEV AKS Cluseter
         pool:
           vmImage: "ubuntu-latest"
