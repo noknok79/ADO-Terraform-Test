@@ -80,8 +80,8 @@ stages:
                     azureSubscription: 'terraform-aks-azurerm-svc-con'
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f /deploy.yaml'
-                    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifests'
+                    inlineScript: 'kubectl apply -f'
+                    workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
 
 
 
@@ -106,8 +106,8 @@ stages:
                     azureSubscription: 'terraform-aks-azurerm-svc-con'
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f /deploy.yaml'
-                    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifests'
+                    inlineScript: 'kubectl apply -f'
+                    workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
 
 
   - stage: DestroyExistingResources
