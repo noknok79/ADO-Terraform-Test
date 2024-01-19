@@ -164,8 +164,8 @@ stages:
   - stage: DeployAKSCluster
     jobs:
       - deployment: DeplyDEVAKSCluster
-        continueOnError: true
         displayName: Deploy DEV AKS Cluseter
+        continueOnError: true
         pool:
           vmImage: "ubuntu-latest"
         environment: $(DEV_ENVIRONMENT)
