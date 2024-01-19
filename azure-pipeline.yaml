@@ -58,10 +58,111 @@ stages:
   ## Step-3: Terraform Initialize (State Storage to store in Azure Storage Account for Dev AKS Cluster)
   ## Step-4: Terraform Plan (Create Plan)
   ## Step-5: Terraform Apply (Use the plan created in previous step)
+- stage: DestroyExistingResources
+    jobs:
+      - deployment: DeleteDEVResources
+        displayName: Destroy DEV Resources created
+        #dependsOn: DeployQAAKSCluster
+        pool:
+          vmImage: "ubuntu-latest"
+        environment: $(DEV_ENVIRONMENT)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadSecureFile@1
+                  displayName: Download SSH
+                  name: sshkey
+                  inputs:
+                    secureFile: "aksprodsshkey.pub"
+
+ 
+
+                - task: TerraformTaskV4@4
+                  displayName: Terraform Init DEV Env
+                  inputs:
+                    provider: "azurerm"
+                    command: "init"
+                    workingDirectory: "$(Pipeline.Workspace)/terraform-manifests-out"
+                    backendServiceArm: "terraform-aks-azurerm-svc-con"
+                    backendAzureRmResourceGroupName: "terraform-aks-storage-rg"
+                    backendAzureRmStorageAccountName: "terratfstatestrg2"
+                    backendAzureRmContainerName: "tfstatefiles"
+                    backendAzureRmKey: "aks-$(DEV_ENVIRONMENT)-tfstate"
+
+                - task: TerraformTaskV4@4
+                  displayName: Terraform Plan to Destroy Dev Env
+                  inputs:
+                    provider: "azurerm"
+                    command: "plan"
+                    workingDirectory: "$(Pipeline.Workspace)/terraform-manifests-out"
+                    environmentServiceNameAzureRM: "terraform-aks-azurerm-svc-con"
+                    commandOptions: "-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out -destroy"
+                    allowTelemetryCollection: false
+
+                - task: TerraformTaskV4@4
+                  displayName: Terraform Destroy
+                  inputs:
+                    provider: "azurerm"
+                    command: "apply"
+                    workingDirectory: "$(Pipeline.Workspace)/terraform-manifests-out"
+                    commandOptions: "$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out"
+                    environmentServiceNameAzureRM: "terraform-aks-azurerm-svc-con"
+
+      - deployment: DeleteQAResources
+        displayName: Destroy QA Resources created
+        #dependsOn: DeleteDEVResources
+        pool:
+          vmImage: "ubuntu-latest"
+        environment: $(QA_ENVIRONMENT)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadSecureFile@1
+                  displayName: Download SSH
+                  name: sshkey
+                  inputs:
+                    secureFile: "aksprodsshkey.pub"
+
+        
+
+
+                - task: TerraformTaskV4@4
+                  displayName: Terraform Init QA Env
+                  inputs:
+                    provider: "azurerm"
+                    command: "init"
+                    workingDirectory: "$(Pipeline.Workspace)/terraform-manifests-out"
+                    backendServiceArm: "terraform-aks-azurerm-svc-con"
+                    backendAzureRmResourceGroupName: "terraform-aks-storage-rg"
+                    backendAzureRmStorageAccountName: "terratfstatestrg2"
+                    backendAzureRmContainerName: "tfstatefiles"
+                    backendAzureRmKey: "aks-$(QA_ENVIRONMENT)-tfstate"
+
+                - task: TerraformTaskV4@4
+                  displayName: Terraform Plan to Destroy QA Env
+                  inputs:
+                    provider: "azurerm"
+                    command: "plan"
+                    workingDirectory: "$(Pipeline.Workspace)/terraform-manifests-out"
+                    environmentServiceNameAzureRM: "terraform-aks-azurerm-svc-con"
+                    commandOptions: "-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(QA_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out -destroy"
+                    allowTelemetryCollection: false
+
+                - task: TerraformTaskV4@4
+                  displayName: Terraform Destroy QA Env
+                  inputs:
+                    provider: "azurerm"
+                    command: "apply"
+                    workingDirectory: "$(Pipeline.Workspace)/terraform-manifests-out"
+                    commandOptions: "$(Pipeline.Workspace)/terraform-manifests-out/$(QA_ENVIRONMENT)-$(Build.BuildId).out"
+                    environmentServiceNameAzureRM: "terraform-aks-azurerm-svc-con"
 
   - stage: DeployAKSCluster
     jobs:
       - deployment: DeplyDEVAKSCluster
+        concontinueOn: True
         displayName: Deploy DEV AKS Cluseter
         pool:
           vmImage: "ubuntu-latest"
@@ -188,8 +289,8 @@ stages:
                     azureSubscription: 'terraform-aks-azurerm-svc-con'
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f kube-manifests'
-                    workingDirectory: '$(System.DefaultWorkingDirectory)'
+                    inlineScript: 'kubectl apply -f deploy'
+                    workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
 
 
 
@@ -214,8 +315,8 @@ stages:
                     azureSubscription: 'terraform-aks-azurerm-svc-con'
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f kube-manifests'
-                    workingDirectory: '$(System.DefaultWorkingDirectory)'
+                    inlineScript: 'kubectl apply -f deploy.yaml'
+                    workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
 
 
   - stage: DestroyAllResources
