@@ -75,17 +75,15 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
 
+                - task: PublishPipelineArtifact@1
+                  inputs:
+                    targetPath: "$(System.DefaultWorkingDirectory)/kube-manifests"
+                    artifact: "kube-manifests-out"
+                    publishLocation: "pipeline"
+
                 - task: KubectlInstaller@0
                   inputs:
                     kubectlVersion: 'latest'
-
-                - task: PublishPipelineArtifact@1
-                  inputs:
-                    targetPath: '$(System.DefaultWorkingDirectory)/kube-manifests'
-                    artifact: 'kube-manifests-out'
-                    publishLocation: 'pipeline'
-
-
 
                 - task: AzureCLI@2
                   inputs:
@@ -110,11 +108,6 @@ stages:
                   name: sshkey
                   inputs:
                     secureFile: "aksprodsshkey.pub"
-
-                - task: KubectlInstaller@0
-                  inputs:
-                    kubectlVersion: 'latest'
-
                 
                 - task: PublishPipelineArtifact@1
                   displayName: Publish Artifacts
@@ -123,14 +116,18 @@ stages:
                     artifact: "kube-manifests-out"
                     publishLocation: "pipeline"
 
+                - task: KubectlInstaller@0
+                  inputs:
+                    kubectlVersion: 'latest'
+
                 
                 - task: AzureCLI@2
                   inputs:
-                    azureSubscription: 'terraform-aks-azurerm-svc-con'
-                    scriptType: 'bash'
-                    scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f deploy.yaml'
-                    workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
+                    azureSubscription: "terraform-aks-azurerm-svc-con"
+                    scriptType: "bash"
+                    scriptLocation: "inlineScript"
+                    inlineScript: "kubectl apply -f deploy.yaml"
+                    workingDirectory: "$(System.DefaultWorkingDirectory)/kube-manifests"
 
 
 
