@@ -77,7 +77,7 @@ stages:
 
                 - task: KubernetesManifest@1
                   inputs:
-                    action: 'apply'
+                    action: 'deploy'
                     connectionType: 'azureResourceManager'
                     azureSubscriptionConnection: 'terraform-aks-azurerm-svc-con'
                     namespace: 'default'
@@ -102,7 +102,7 @@ stages:
   
                 - task: KubernetesManifest@1
                   inputs:
-                    action: 'apply'
+                    action: 'deploy'
                     connectionType: 'azureResourceManager'
                     azureSubscriptionConnection: 'terraform-aks-azurerm-svc-con'
                     namespace: 'default'
