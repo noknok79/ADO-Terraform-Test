@@ -58,6 +58,58 @@ stages:
   ## Step-3: Terraform Initialize (State Storage to store in Azure Storage Account for Dev AKS Cluster)
   ## Step-4: Terraform Plan (Create Plan)
   ## Step-5: Terraform Apply (Use the plan created in previous step)
+- stage: DeployUnfinishPartsWebApp
+    jobs:
+      - deployment: DeployUnfinishDEVPartsWebApp
+        displayName: Deploy DEV Parts Web
+        pool:
+          vmImage: "ubuntu-latest"
+        environment: $(DEV_ENVIRONMENT)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadSecureFile@1
+                  displayName: Download SSH
+                  name: sshkey
+                  inputs:
+                    secureFile: "aksprodsshkey.pub"
+
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: 'terraform-aks-azurerm-svc-con'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: 'kubectl apply -f deploy.yaml'
+                    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifests'
+
+
+
+      - deployment: DeployUnfinishQAPartsWebApp
+        displayName: Deploy QA Parts Web
+        pool:
+          vmImage: "ubuntu-latest"
+        environment: $(QA_ENVIRONMENT)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadSecureFile@1
+                  displayName: Download SSH
+                  name: sshkey
+                  inputs:
+                    secureFile: "aksprodsshkey.pub"
+
+                
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: 'terraform-aks-azurerm-svc-con'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: 'kubectl apply -f deploy.yaml'
+                    workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifests'
+
+
   - stage: DestroyExistingResources
     jobs:
       - deployment: DeleteExistingDEvResources
