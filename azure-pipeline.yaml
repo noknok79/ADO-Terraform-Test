@@ -81,7 +81,7 @@ stages:
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
                     inlineScript: ''
-                    arguments: 'kubectlapply -f deploy.yaml'
+                    arguments: 'kubectl apply -f deploy.yaml'
                     workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
 
 
@@ -107,7 +107,7 @@ stages:
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
                     inlineScript: ''
-                    arguments: 'kubectlapply -f deploy.yaml'
+                    arguments: 'kubectl apply -f deploy.yaml'
                     workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
 
 
