@@ -17,12 +17,11 @@ resource "azurerm_kubernetes_cluster_node_pool" "javaapp" {
     "environment"   = var.environment
     "nodepoolos"    = "linux"
     "app"           = "ava-apps"
-
-    tags = {
-      "nodepool-type" = "user"
-      "environment"   = var.environment
-      "nodepoolos"    = "linux"
-      "app"           = "ava-apps"
-    }
+  }
+  tags = {
+    "nodepool-type" = "user"
+    "environment"   = var.environment
+    "nodepoolos"    = "linux"
+    "app"           = "ava-apps"
   }
 }
