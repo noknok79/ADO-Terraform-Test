@@ -80,7 +80,7 @@ stages:
                     azureSubscription: 'terraform-aks-azurerm-svc-con'
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f deploy.yaml'
+                    inlineScript: 'kubectl apply -f /kube-manifests/deploy.yaml'
                     workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
 
 
@@ -105,7 +105,7 @@ stages:
                     azureSubscription: 'terraform-aks-azurerm-svc-con'
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f deploy.yaml'
+                    inlineScript: 'kubectl apply -f /kube-manifests/deploy.yaml'
                     workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
 
 
