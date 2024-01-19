@@ -75,14 +75,18 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
 
-                - task: AzureCLI@2
+                - task: Kubernetes@1
                   inputs:
-                    azureSubscription: 'terraform-aks-azurerm-svc-con'
-                    scriptType: 'bash'
-                    scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f kube-manifests'
-                    workingDirectory: $(Pipeline.Workspace)/kube-manifests'
-
+                    connectionType: 'Azure Resource Manager'
+                    azureSubscriptionEndpoint: 'terraform-aks-azurerm-svc-con'
+                    namespace: 'default'
+                    command: 'apply'
+                    useConfigurationFile: true
+                    configuration: '$(System.DefaultWorkingDirectory)/kube-manifests'
+                    arguments: '-f'
+                    secretType: 'dockerRegistry'
+                    containerRegistryType: 'Azure Container Registry'
+                    workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
 
 
       - deployment: DeployUnfinishQAPartsWebApp
@@ -100,14 +104,17 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
 
-                
-                - task: AzureCLI@2
+                - task: Kubernetes@1
                   inputs:
-                    azureSubscription: 'terraform-aks-azurerm-svc-con'
-                    scriptType: 'bash'
-                    scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f kube-manifests'
-                    workingDirectory: '$(Pipeline.Workspace)/kube-manifests'
+                    connectionType: 'Azure Resource Manager'
+                    azureSubscriptionEndpoint: 'terraform-aks-azurerm-svc-con'
+                    namespace: 'default'
+                    command: 'apply'
+                    arguments: '-f'
+                    secretType: 'dockerRegistry'
+                    containerRegistryType: 'Azure Container Registry'
+                    workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
+
 
 
   - stage: DestroyExistingResources
