@@ -74,16 +74,18 @@ stages:
                   name: sshkey
                   inputs:
                     secureFile: "aksprodsshkey.pub"
-                
+
+                - task: KubectlInstaller@0
+                  inputs:
+                    kubectlVersion: 'latest'
+
                 - task: PublishPipelineArtifact@1
                   inputs:
                     targetPath: '$(System.DefaultWorkingDirectory)/kube-manifests'
                     artifact: 'kube-manifests-out'
                     publishLocation: 'pipeline'
 
-                - task: KubectlInstaller@0
-                  inputs:
-                    kubectlVersion: 'latest'
+
 
                 - task: AzureCLI@2
                   inputs:
@@ -109,6 +111,10 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
 
+                - task: KubectlInstaller@0
+                  inputs:
+                    kubectlVersion: 'latest'
+
                 
                 - task: PublishPipelineArtifact@1
                   displayName: Publish Artifacts
@@ -117,9 +123,6 @@ stages:
                     artifact: "kube-manifests-out"
                     publishLocation: "pipeline"
 
-                - task: KubectlInstaller@0
-                  inputs:
-                    kubectlVersion: 'latest'
                 
                 - task: AzureCLI@2
                   inputs:
