@@ -75,16 +75,13 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
                 
-                - task: Kubernetes@1
+                - task: PublishPipelineArtifact@1
+                  displayName: Publish Artifacts
                   inputs:
-                    connectionType: 'Azure Resource Manager'
-                    azureSubscriptionEndpoint: 'terraform-aks-azurerm-svc-con'
-                    azureResourceGroup: 'terraform-aks-$(DEV_ENVIRONMENT)'
-                    kubernetesCluster: 'terraform-aks-$(DEV_ENVIRONMENT)-cluster'
-                    command: 'apply'
-                    arguments: '-f /kube-manifests/deploy.yaml'
-                    secretType: 'dockerRegistry'
-                    containerRegistryType: 'Azure Container Registry'
+                    targetPath: "$(System.DefaultWorkingDirectory)/kube-manifests"
+                    artifact: "kube-manifests-out"
+                    publishLocation: "pipeline"
+
 
 
 
@@ -103,17 +100,22 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
 
-                - task: Kubernetes@1
+                
+                - task: PublishPipelineArtifact@1
+                  displayName: Publish Artifacts
                   inputs:
-                    connectionType: 'Azure Resource Manager'
-                    azureSubscriptionEndpoint: 'terraform-aks-azurerm-svc-con'
-                    azureResourceGroup: 'terraform-aks-$(QA_ENVIRONMENT)'
-                    kubernetesCluster: 'terraform-aks-$(QA_ENVIRONMENT)-cluster'
-                    command: 'apply'
-                    arguments: '-f /kube-manifests/deploy.yaml'
-                    secretType: 'dockerRegistry'
-                    containerRegistryType: 'Azure Container Registry'
+                    targetPath: "$(System.DefaultWorkingDirectory)/kube-manifests"
+                    artifact: "kube-manifests-out"
+                    publishLocation: "pipeline"
 
+                
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: 'terraform-aks-azurerm-svc-con'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: 'kubectl apply -f deploy.yaml'
+                    workingDirectory: '(System.DefaultWorkingDirectory)/kube-manifests'
 
 
 
