@@ -79,10 +79,11 @@ stages:
 
                 - task: AzureCLI@2
                   inputs:
+                    targetPath: "$(System.DefaultWorkingDirectory)/kube-manifests"
                     azureSubscription: 'terraform-aks-azurerm-svc-con'
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f $(System.DefaultWorkingDirectory)/kube-manifests/deploy.yaml'
+                    inlineScript: 'kubectl apply -f $(System.DefaultWorkingDirectory)/deploy.yaml'
 
 
 
@@ -104,12 +105,12 @@ stages:
                     
                 - task: AzureCLI@2
                   inputs:
+                    targetPath: "$(System.DefaultWorkingDirectory)/kube-manifests"
                     azureSubscription: 'terraform-aks-azurerm-svc-con'
-                    
                     scriptType: 'bash'
                     scriptLocation: 'inlineScript'
-                    inlineScript: 'kubectl apply -f $(System.DefaultWorkingDirectory)/kube-manifests/deploy.yaml'
-                    
+                    inlineScript: 'kubectl apply -f $(System.DefaultWorkingDirectory)/deploy.yaml'
+
 
 
 
