@@ -169,7 +169,7 @@ stages:
   - stage: DeployPartsWebApp
     jobs:
       - deployment: DeployDEVPartsWebApp
-        displayName: Deploy DEV AKS Cluseter
+        displayName: Deploy DEV Parts Web
         pool:
           vmImage: "ubuntu-latest"
         environment: $(DEV_ENVIRONMENT)
@@ -193,8 +193,8 @@ stages:
                     useGlobalConfig: true
                     workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifest'
 
-      - deployment: DeployQCPartsWebApp
-        displayName: Deploy QA AKS Cluseter
+      - deployment: DeployQAPartsWebApp
+        displayName: Deploy QA Parts Web
         pool:
           vmImage: "ubuntu-latest"
         environment: $(QA_ENVIRONMENT)
