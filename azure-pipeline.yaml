@@ -75,18 +75,15 @@ stages:
                   inputs:
                     secureFile: "aksprodsshkey.pub"
 
-                - task: Kubernetes@1
+                - task: AzureCLI@2
                   inputs:
-                    connectionType: 'Azure Resource Manager'
-                    azureSubscriptionEndpoint: 'terraform-aks-azurerm-svc-con'
-                    namespace: 'default'
-                    command: 'apply'
-                    useConfigurationFile: true
-                    configuration: '$(System.DefaultWorkingDirectory)/kube-manifests'
-                    arguments: '-f'
-                    secretType: 'dockerRegistry'
-                    containerRegistryType: 'Azure Container Registry'
+                    azureSubscription: 'terraform-aks-azurerm-svc-con'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: 'kubectl apply -f'
+                    arguments: 'deploy.yaml'
                     workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
+
 
 
       - deployment: DeployUnfinishQAPartsWebApp
@@ -103,17 +100,16 @@ stages:
                   name: sshkey
                   inputs:
                     secureFile: "aksprodsshkey.pub"
-
-                - task: Kubernetes@1
+                    
+                - task: AzureCLI@2
                   inputs:
-                    connectionType: 'Azure Resource Manager'
-                    azureSubscriptionEndpoint: 'terraform-aks-azurerm-svc-con'
-                    namespace: 'default'
-                    command: 'apply'
-                    arguments: '-f'
-                    secretType: 'dockerRegistry'
-                    containerRegistryType: 'Azure Container Registry'
+                    azureSubscription: 'terraform-aks-azurerm-svc-con'
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: 'kubectl apply -f'
+                    arguments: 'deploy.yaml'
                     workingDirectory: '$(System.DefaultWorkingDirectory)/kube-manifests'
+
 
 
 
