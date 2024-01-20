@@ -61,6 +61,7 @@ stages:
   - stage: DeployUnfinishPartsWebApp
     jobs:
       - deployment: DeployUnfinishDEVPartsWebApp
+        continueOnError: true
         displayName: Deploy DEV Parts Web
         pool:
           vmImage: "ubuntu-latest"
