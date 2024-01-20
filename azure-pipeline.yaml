@@ -58,54 +58,6 @@ stages:
   ## Step-3: Terraform Initialize (State Storage to store in Azure Storage Account for Dev AKS Cluster)
   ## Step-4: Terraform Plan (Create Plan)
   ## Step-5: Terraform Apply (Use the plan created in previous step)
-  - stage: DeployUnfinishPartsWebApp
-    jobs:
-      - deployment: DeployUnfinishDEVPartsWebApp
-        continueOnError: true
-        displayName: Deploy DEV Parts Web
-        pool:
-          vmImage: "ubuntu-latest"
-        environment: $(DEV_ENVIRONMENT)
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - task: DownloadSecureFile@1
-                  displayName: Download SSH
-                  name: sshkey
-                  inputs:
-                    secureFile: "aksprodsshkey.pub"
-
-                - task: KubernetesManifest@1
-                  inputs:
-                    action: 'deploy'
-                    connectionType: 'kubernetesServiceConnection'
-                    namespace: 'default'
-                    manifests: 'deploy.yaml'
-
-
-
-      - deployment: DeployUnfinishQAPartsWebApp
-        displayName: Deploy QA Parts Web
-        pool:
-          vmImage: "ubuntu-latest"
-        environment: $(QA_ENVIRONMENT)
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - task: DownloadSecureFile@1
-                  displayName: Download SSH
-                  name: sshkey
-                  inputs:
-                    secureFile: "aksprodsshkey.pub"
-  
-                - task: KubernetesManifest@1
-                  inputs:
-                    action: 'deploy'
-                    connectionType: 'kubernetesServiceConnection'
-                    namespace: 'default'
-                    manifests: 'deploy.yaml'
 
 
   - stage: DestroyExistingResources
